@@ -1,10 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: process.env.NODE_ENV === "production"? "production" : "development",
-    entry: path.resolve(__dirname, './src/index.ts'),
+    target: "node",
+    entry: path.resolve(__dirname, './src/renderer/index.ts'),
     module: {
         rules: [
             {
@@ -15,14 +17,15 @@ module.exports = {
         ],
     },
     output: {
-        library: 'TS',
-        path: path.resolve(__dirname, './lib'),
-        filename: 'index.umd.js',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
+        path: path.resolve(__dirname, './lib/renderer'),
+        filename: 'index.js',
     },
     resolve: {
         extensions: ['.ts', '.js'],
+    },
+    externals: {
+        electronRenderer: true,
+        node: true
     },
     plugins: [
         new webpack.SourceMapDevToolPlugin({
@@ -32,5 +35,12 @@ module.exports = {
             global: 'window',
         }),
         new CleanWebpackPlugin(),
+        new CopyWebpackPlugin([{
+            from:  path.resolve(__dirname, 'src/renderer/assets'),
+            to:  path.resolve(__dirname, 'lib/renderer/assets'),
+        },{
+            from:  path.resolve(__dirname, 'src/renderer/index.html'),
+            to:  path.resolve(__dirname, 'lib/renderer/index.html'),
+        }])
     ],
 };
