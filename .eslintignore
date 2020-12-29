@@ -1,0 +1,6 @@
+node_modules/
+lib/
+.eslint*
+.prettierrc.js
+*.json
+webpack.config.js
