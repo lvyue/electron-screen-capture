@@ -4,3 +4,4 @@ lib/
 .prettierrc.js
 *.json
 webpack.config.js
+example/

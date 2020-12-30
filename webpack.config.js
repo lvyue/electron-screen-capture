@@ -5,7 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: process.env.NODE_ENV === "production"? "production" : "development",
-    target: "node",
+    target: "electron-renderer",
     entry: path.resolve(__dirname, './src/renderer/index.ts'),
     module: {
         rules: [
@@ -22,10 +22,6 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.js'],
-    },
-    externals: {
-        electronRenderer: true,
-        node: true
     },
     plugins: [
         new webpack.SourceMapDevToolPlugin({

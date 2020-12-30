@@ -50,7 +50,7 @@ document.body.addEventListener(
 const handleError = (e: Error) => {
     ipcRenderer.send('screen-capture::action', {
         type: 'error',
-        error: e,
+        error: e.stack || e.message,
     });
 };
 
@@ -137,10 +137,10 @@ const handleStream = (stream: MediaStream, scope: TakeScreenScope) => {
                         type: 'select',
                         screenId: display.id,
                     });
-                    const { r, b } = capture.selectRect;
-                    $toolbar.style.display = 'flex';
+                    const { b, x } = capture.selectRect;
                     $toolbar.style.top = `${b + 15}px`;
-                    $toolbar.style.right = `${window.screen.width - r}px`;
+                    $toolbar.style.left = `${x}px`;
+                    $toolbar.style.display = 'flex';
                 }
             };
             capture.on('end-dragging', onDragEnd);
@@ -258,14 +258,16 @@ ipcRenderer.on('screen-capture::take-screen', (events, data: TakeScreenData) => 
                 .getUserMedia({
                     audio: false,
                     video: {
-                        // mandatory: {
-                        //     chromeMediaSource: 'desktop',
-                        //     chromeMediaSourceId: selectSource.id,
-                        //     minWidth: scope.width,
-                        //     minHeight: scope.height,
-                        //     maxWidth,
-                        //     maxHeight,
-                        // },
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        //@ts-ignore
+                        mandatory: {
+                            chromeMediaSource: 'desktop',
+                            chromeMediaSourceId: selectSource.id,
+                            minWidth: scope.width,
+                            minHeight: scope.height,
+                            maxWidth,
+                            maxHeight,
+                        },
                     },
                 })
                 .then((stream) => handleStream(stream, scope))

@@ -78,7 +78,6 @@ export default class ScreenCapture extends EventEmitter {
                 } as TakeScreenData);
             });
             captureWin.loadURL(editorHtmlPath);
-            webContents.openDevTools();
             this.$wins[displayId] = captureWin;
             this.displayMap[displayId] = display;
         });

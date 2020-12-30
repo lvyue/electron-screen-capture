@@ -76,11 +76,11 @@ export class CaptureEditor extends EventEmitter {
         this.canvasRect = this.canvas.getBoundingClientRect();
 
         Promise.all([this.init(), this.initEvent()]).then(() => {
-            // console.log('init')
+            console.log('CaptureEditor init');
         });
     }
 
-    init = async (): Promise<void> => {
+    init = (): Promise<void> => {
         return new Promise((resolve, reject) => {
             this.backgroundElement.style.backgroundImage = `url(${this.backgroundImageSrc})`;
             this.backgroundElement.style.backgroundSize = `${this.screenWidth}px ${this.screenHeight}px`;
@@ -283,14 +283,7 @@ export class CaptureEditor extends EventEmitter {
 
         const { pageX, pageY } = e;
         let startDragging;
-        let { selectRect } = this;
         if (!this.startPoint) {
-            return;
-        }
-        if (!selectRect) {
-            return;
-        }
-        if (!this.startDragRect) {
             return;
         }
         if (!this.startPoint.moved) {
@@ -302,8 +295,14 @@ export class CaptureEditor extends EventEmitter {
         if (!this.startPoint.moved) {
             return;
         }
-
+        let { selectRect } = this;
         if (this.action === MOVING_RECT) {
+            if (!selectRect) {
+                return;
+            }
+            if (!this.startDragRect) {
+                return;
+            }
             // 移动选区
             if (startDragging) {
                 this.emit('start-dragging', selectRect);
@@ -339,6 +338,9 @@ export class CaptureEditor extends EventEmitter {
             };
             this.drawRect();
         } else if (this.action === RESIZE) {
+            if (!selectRect) {
+                return;
+            }
             this.emit('dragging', selectRect);
             const { row, col } = ANCHORS[this.selectAnchorIndex];
             if (row) {

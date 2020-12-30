@@ -11,9 +11,9 @@ function createWindow() {
     });
 
     win.loadFile('./renderer/index.html');
-    win.webContents.on('did-finish-load', () => {
-        win.webContents.openDevTools({});
-    });
+    // win.webContents.on('did-finish-load', () => {
+    //     win.webContents.openDevTools({});
+    // });
 }
 
 app.whenReady().then(() => {
